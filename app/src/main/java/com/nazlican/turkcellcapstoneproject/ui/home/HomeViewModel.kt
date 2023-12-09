@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.nazlican.turkcellcapstoneproject.common.Resource
 import com.nazlican.turkcellcapstoneproject.data.model.Products
 import com.nazlican.turkcellcapstoneproject.data.repo.HomeRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
 
     private var _homeState = MutableLiveData<HomeState>()
