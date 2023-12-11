@@ -3,7 +3,9 @@ package com.nazlican.turkcellcapstoneproject.ui.home
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.nazlican.turkcellcapstoneproject.R
 import com.nazlican.turkcellcapstoneproject.common.viewBinding
 import com.nazlican.turkcellcapstoneproject.databinding.FragmentHomeBinding
@@ -24,9 +26,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewModel.getAllProducts()
         mainProductObserve()
+        search()
 
         with(binding) {
-            productAdapter = ProductAdapter()
+            productAdapter = ProductAdapter(::homeToDetail)
             rvProducts.adapter = productAdapter
         }
     }
@@ -44,6 +47,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     productAdapter.updateList(state.products)
                 }
 
+                is HomeState.SuccessSearchState -> {
+                    homeProgressBar.gone()
+                    productAdapter.updateList(state.products)
+                }
+
                 is HomeState.EmptyScreen -> {
                     homeProgressBar.gone()
                     homeEmptyIv.visible()
@@ -57,5 +65,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
+    }
+    private fun homeToDetail(id: Int) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(id)
+        findNavController().navigate(action)
+    }
+    fun search() {
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.searchProduct(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                    viewModel.searchProduct(newText)
+                return true
+            }
+        })
     }
 }

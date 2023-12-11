@@ -26,11 +26,20 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
             is Resource.Error -> HomeState.ShowPopUp(result.errorMessage)
         }
     }
+    fun searchProduct(query: String) = viewModelScope.launch {
+        _homeState.value = HomeState.Loading
 
+        _homeState.value = when (val result = homeRepository.searchProducts(query)) {
+            is Resource.Success -> HomeState.SuccessSearchState(result.data)
+            is Resource.Fail -> HomeState.EmptyScreen(result.failMessage)
+            is Resource.Error -> HomeState.ShowPopUp(result.errorMessage)
+        }
+    }
 }
 sealed interface HomeState {
     object Loading : HomeState
     data class SuccessProductState(val products: List<Products>) : HomeState
+    data class SuccessSearchState(val products: List<Products>) : HomeState
     data class EmptyScreen(val failMessage: String) : HomeState
     data class ShowPopUp(val errorMessage: String) : HomeState
 }

@@ -23,4 +23,19 @@ class HomeRepository(private val productService: ProductService) {
                 Resource.Error(e.message.orEmpty())
             }
         }
+
+    suspend fun searchProducts(query: String): Resource<List<Products>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.searchProduct(query)
+                if (response.isSuccessful) {
+                    val productList = response.body()?.products.orEmpty()
+                    Resource.Success(productList)
+                }else{
+                    Resource.Fail("An error occurred")
+                }
+            }catch (e:Exception){
+                Resource.Error(e.message.orEmpty())
+            }
+        }
 }
