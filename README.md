@@ -1,6 +1,6 @@
 # ECommerce
 
-Android Programming training with Kotlin training graduation project organized by Turkcell Gelecegi Yazanlar
+Turkcell Gelecegi Yazanlar Android Programming training with Kotlin
 
 Technologies
 
